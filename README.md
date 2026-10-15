@@ -3,6 +3,9 @@
 <a href="https://www.credly.com/badges/6c178145-c9fc-41f1-8b55-721d4f2d8ac2/public_url">
   <img src="docs/badge-bpmn.png" alt="Camunda Knowledge – BPMN" width="140">
 </a>
+<a href="https://www.credly.com/badges/65984af8-7e16-459c-8b23-ddd1b5019758/public_url">
+  <img src="docs/badge-business-analyst.png" alt="Camunda 8 – Business Analyst" width="140">
+</a>
 
 In diesem Projekt habe ich mir angeschaut, wie ein Leistungsantrag bei einer Krankenkasse bearbeitet wird, und den Ablauf mit BPMN neu gedacht. Ausgangspunkt war die Frage, wie man so einen Prozess digitalisieren kann, ohne dass die Fachlichkeit auf der Strecke bleibt.
 
