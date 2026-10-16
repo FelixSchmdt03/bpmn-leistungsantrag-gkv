@@ -15,8 +15,9 @@ Spannend fand ich vor allem die gesetzlichen Fristen. Nach § 13 Abs. 3a SGB V m
 
 - [x] Ist-Prozess modelliert und Schwachstellen analysiert
 - [x] Soll-Prozess entworfen (strategisch und operativ)
-- [ ] Prozess in Camunda 8 ausführbar machen (Formulare, DMN, Nachrichten)
-- [ ] Kennzahlen im Ist/Soll-Vergleich auswerten
+- [x] Prozess in Camunda 8 ausführbar gemacht (Formulare, Entscheidungstabelle, Nachrichten) und getestet
+- [ ] Weitere Automatisierung (Dunkelverarbeitung eindeutiger Fälle)
+- [ ] Automatisierte Prozesstests und Kennzahlen
 
 ## Ist-Prozess
 
@@ -45,7 +46,7 @@ Die grobe Sicht für alle, die nur wissen wollen, was passiert, nicht wie.
 
 ![Operativer Soll-Prozess](docs/soll-leistungsantrag.png)
 
-Hier sieht man, wer was macht. Alles in der Lane „System“ übernimmt die Process Engine, Menschen kommen nur noch dort ins Spiel, wo wirklich eine fachliche Einschätzung gebraucht wird. Die beiden Kommunikationsschleifen (Unterlagen nachfordern, Gutachten einholen) habe ich in Unterprozesse ausgelagert, damit das Hauptmodell lesbar bleibt:
+Alles in der Lane „System“ übernimmt die Process Engine, Menschen kommen nur dort ins Spiel, wo wirklich eine fachliche Einschätzung gebraucht wird. Die beiden Kommunikationsschleifen habe ich in Unterprozesse ausgelagert, damit das Hauptmodell lesbar bleibt:
 
 ![Unterlagen nachfordern](docs/soll-unterlagen-nachfordern.png)
 
@@ -55,25 +56,47 @@ Hier sieht man, wer was macht. Alles in der Lane „System“ übernimmt die Pro
 
 | Problem im Ist-Prozess | Lösung im Soll-Prozess |
 |---|---|
-| Frist wird nicht überwacht | Ein Timer meldet sich vor Fristablauf, die Teamleitung priorisiert den Vorgang |
+| Frist wird nicht überwacht | Die Frist wird aus dem Eingangsdatum berechnet. Kurz vor Ablauf meldet sich die Teamleitung, bei MD-Beteiligung erst vor der verlängerten 5-Wochen-Frist |
 | Versicherter wird bei MD-Gutachten nicht informiert | Direkt nach dem Gutachtenauftrag geht automatisch eine Information raus |
 | Warten ohne Nachhaken | Nach 14 bzw. 21 Tagen wird automatisch erinnert |
 | Post und Scannen | Der Antrag kommt digital rein |
 | Gutachtenbedarf uneinheitlich | Gesetzliche Pflichtfälle erkennt eine Entscheidungstabelle (DMN), alle anderen Fälle prüft weiterhin ein Sachbearbeiter |
 | Bescheide von Hand | Der Bescheid wird automatisch aus einer Vorlage erzeugt |
 
-Eine Sache war mir beim Gutachten wichtig: Das System kann nur sicher sagen, wann ein Gutachten **gesetzlich vorgeschrieben** ist. Ob es darüber hinaus nötig ist (§ 275 Abs. 1 SGB V), ist eine Ermessensfrage. Deshalb entscheidet das System hier nie „kein Gutachten“, sondern legt diese Fälle dem Sachbearbeiter vor.
+Eine Sache war mir beim Gutachten wichtig: Das System kann nur sicher sagen, wann ein Gutachten **gesetzlich vorgeschrieben** ist. Ob es darüber hinaus nötig ist (§ 275 Abs. 1 SGB V), ist eine Ermessensfrage. Deshalb entscheidet das System hier nie „kein Gutachten“, sondern legt diese Fälle dem Sachbearbeiter vor. Wählt der Sachbearbeiter bei einem Pflichtfall trotzdem den Weg ohne Gutachten, bleibt der Prozess mit einem Fehler stehen, statt einen falschen Bescheid zu verschicken.
 
-Bewusst nicht modelliert habe ich das Widerspruchsverfahren und Hilfsmittel zum Behinderungsausgleich, für die eigene Fristen gelten.
+### Was ich nach dem ersten Testlauf geändert habe
+
+Beim Durchspielen in Camunda ist mir aufgefallen, dass derselbe Sachbearbeiter den Antrag ohne Gutachten zweimal hintereinander angefasst hat: erst prüfen, dann entscheiden. Jetzt entscheidet er in solchen Fällen direkt bei der Prüfung. Ein eigener Entscheidungsschritt bleibt nur dort, wo ein Gutachten neue Informationen bringt.
+
+Außerdem war die Fristwarnung anfangs ein fester Testwert. Jetzt wird sie aus dem Eingangsdatum berechnet und berücksichtigt die verlängerte Frist bei MD-Beteiligung.
+
+## Ausprobieren
+
+Die Modelle laufen auf Camunda 8. Dafür alle Dateien aus `models/` (ohne `versionen/`) und `forms/` in ein Camunda-Projekt hochladen, gemeinsam deployen und im Testmodus starten. Testdaten sind am Startereignis hinterlegt.
+
+Die Regeln in der Entscheidungstabelle sind bewusst vereinfacht und fiktiv. Echte Kassen arbeiten hier mit deutlich umfangreicheren Regelwerken.
+
+## Versionsverlauf
+
+| Version | Stand |
+|---|---|
+| v1 | Ist-Prozess mit Schwachstellenanalyse |
+| v2 | Erster Soll-Entwurf mit Fristenlogik |
+| v3 | Soll-Prozess neu strukturiert: Unterprozesse, Ereignis-Unterprozesse, Datenspeicher, strategisches Modell |
+| v4 | In Camunda ausführbar gemacht: Entscheidungstabelle, Formulare, Nachrichten |
+| v5 | Entscheidung bei eindeutigen Fällen direkt in der Prüfung |
+| v6 | Fristen werden berechnet, inklusive Verlängerung bei MD-Beteiligung |
+
+Die Zwischenstände liegen in [`models/versionen/`](models/versionen/).
 
 ## Dateien
 
-| Datei | Inhalt |
+| Ordner | Inhalt |
 |---|---|
-| [`models/ist-leistungsantrag.bpmn`](models/ist-leistungsantrag.bpmn) | Ist-Prozess |
-| [`models/strategisch-leistungsantrag.bpmn`](models/strategisch-leistungsantrag.bpmn) | Strategischer Überblick |
-| [`models/soll-leistungsantrag.bpmn`](models/soll-leistungsantrag.bpmn) | Operativer Soll-Prozess (Camunda 8) |
-
-Die Modelle lassen sich mit dem Camunda Desktop Modeler öffnen.
+| `models/` | Ist-, strategischer und aktueller Soll-Prozess, Entscheidungstabelle (DMN) |
+| `models/versionen/` | Frühere Stände des Soll-Prozesses als BPMN und Bild |
+| `forms/` | Formulare für die Benutzeraufgaben |
+| `docs/` | Diagrammbilder und Badges |
 
 *Fiktives Lernprojekt ohne echte Daten.*
