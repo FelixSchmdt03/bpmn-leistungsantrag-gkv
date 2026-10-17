@@ -16,7 +16,7 @@ Spannend fand ich vor allem die gesetzlichen Fristen. Nach § 13 Abs. 3a SGB V m
 - [x] Ist-Prozess modelliert und Schwachstellen analysiert
 - [x] Soll-Prozess entworfen (strategisch und operativ)
 - [x] Prozess in Camunda 8 ausführbar gemacht (Formulare, Entscheidungstabelle, Nachrichten) und getestet
-- [ ] Weitere Automatisierung (Dunkelverarbeitung eindeutiger Fälle)
+- [x] Dunkelverarbeitung eindeutiger Standardfälle
 - [ ] Automatisierte Prozesstests und Kennzahlen
 
 ## Ist-Prozess
@@ -62,6 +62,7 @@ Alles in der Lane „System“ übernimmt die Process Engine, Menschen kommen nu
 | Post und Scannen | Der Antrag kommt digital rein |
 | Gutachtenbedarf uneinheitlich | Gesetzliche Pflichtfälle erkennt eine Entscheidungstabelle (DMN), alle anderen Fälle prüft weiterhin ein Sachbearbeiter |
 | Bescheide von Hand | Der Bescheid wird automatisch aus einer Vorlage erzeugt |
+| Jeder Antrag landet beim Sachbearbeiter | Eindeutige Standardfälle bewilligt das System selbst (Dunkelverarbeitung) |
 
 Eine Sache war mir beim Gutachten wichtig: Das System kann nur sicher sagen, wann ein Gutachten **gesetzlich vorgeschrieben** ist. Ob es darüber hinaus nötig ist (§ 275 Abs. 1 SGB V), ist eine Ermessensfrage. Deshalb entscheidet das System hier nie „kein Gutachten“, sondern legt diese Fälle dem Sachbearbeiter vor. Wählt der Sachbearbeiter bei einem Pflichtfall trotzdem den Weg ohne Gutachten, bleibt der Prozess mit einem Fehler stehen, statt einen falschen Bescheid zu verschicken.
 
@@ -70,6 +71,10 @@ Eine Sache war mir beim Gutachten wichtig: Das System kann nur sicher sagen, wan
 Beim Durchspielen in Camunda ist mir aufgefallen, dass derselbe Sachbearbeiter den Antrag ohne Gutachten zweimal hintereinander angefasst hat: erst prüfen, dann entscheiden. Jetzt entscheidet er in solchen Fällen direkt bei der Prüfung. Ein eigener Entscheidungsschritt bleibt nur dort, wo ein Gutachten neue Informationen bringt.
 
 Außerdem war die Fristwarnung anfangs ein fester Testwert. Jetzt wird sie aus dem Eingangsdatum berechnet und berücksichtigt die verlängerte Frist bei MD-Beteiligung.
+
+### Dunkelverarbeitung
+
+Im letzten Schritt habe ich eindeutige Standardfälle automatisiert: Ein Hilfsmittel mit ärztlicher Verordnung bis 500 € bewilligt das System ohne Sachbearbeiter. Rechtlich ist das nach § 31a SGB X möglich, solange kein Anlass besteht, den Einzelfall von einem Menschen bearbeiten zu lassen. Wichtig war mir dabei: Das System **bewilligt nur**, es lehnt nie automatisch ab. Alles, was nicht eindeutig ist, landet weiterhin bei der Sachbearbeitung.
 
 ## Ausprobieren
 
@@ -87,8 +92,9 @@ Die Regeln in der Entscheidungstabelle sind bewusst vereinfacht und fiktiv. Echt
 | v4 | In Camunda ausführbar gemacht: Entscheidungstabelle, Formulare, Nachrichten |
 | v5 | Entscheidung bei eindeutigen Fällen direkt in der Prüfung |
 | v6 | Fristen werden berechnet, inklusive Verlängerung bei MD-Beteiligung |
+| v7 | Dunkelverarbeitung: eindeutige Standardfälle werden automatisch bewilligt |
 
-Die aktuelle Version (v6) liegt in [`camunda/`](camunda/), frühere Stände in [`models/versionen/`](models/versionen/).
+Die aktuelle Version (v7) liegt in [`camunda/`](camunda/), frühere Stände in [`models/versionen/`](models/versionen/).
 
 ## Dateien
 
