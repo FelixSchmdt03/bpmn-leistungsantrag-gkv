@@ -73,7 +73,7 @@ Außerdem war die Fristwarnung anfangs ein fester Testwert. Jetzt wird sie aus d
 
 ## Ausprobieren
 
-Die Modelle laufen auf Camunda 8. Dafür alle Dateien aus `models/` (ohne `versionen/`) und `forms/` in ein Camunda-Projekt hochladen, gemeinsam deployen und im Testmodus starten. Testdaten sind am Startereignis hinterlegt.
+Alles, was in Camunda 8 läuft, liegt im Ordner [`camunda/`](camunda/): der Soll-Prozess, die Entscheidungstabelle und die Formulare. Der Ordner ist per Git Sync mit meinem Camunda-Projekt verbunden. Wer es selbst ausprobieren will, lädt die Dateien in ein Camunda-Projekt, deployt sie gemeinsam und startet den Testmodus. Testdaten sind am Startereignis hinterlegt.
 
 Die Regeln in der Entscheidungstabelle sind bewusst vereinfacht und fiktiv. Echte Kassen arbeiten hier mit deutlich umfangreicheren Regelwerken.
 
@@ -88,15 +88,15 @@ Die Regeln in der Entscheidungstabelle sind bewusst vereinfacht und fiktiv. Echt
 | v5 | Entscheidung bei eindeutigen Fällen direkt in der Prüfung |
 | v6 | Fristen werden berechnet, inklusive Verlängerung bei MD-Beteiligung |
 
-Die Zwischenstände liegen in [`models/versionen/`](models/versionen/).
+Die aktuelle Version (v6) liegt in [`camunda/`](camunda/), frühere Stände in [`models/versionen/`](models/versionen/).
 
 ## Dateien
 
 | Ordner | Inhalt |
 |---|---|
-| `models/` | Ist-, strategischer und aktueller Soll-Prozess, Entscheidungstabelle (DMN) |
+| `camunda/` | Ausführbarer Soll-Prozess, Entscheidungstabelle (DMN) und Formulare, synchronisiert mit Camunda |
+| `models/` | Ist-Prozess und strategisches Modell |
 | `models/versionen/` | Frühere Stände des Soll-Prozesses als BPMN und Bild |
-| `forms/` | Formulare für die Benutzeraufgaben |
 | `docs/` | Diagrammbilder und Badges |
 
 *Fiktives Lernprojekt ohne echte Daten.*
