@@ -1,0 +1,180 @@
+{
+  "components": [
+    {
+      "type": "text",
+      "text": "## Antrag {{antragsId}}\n\n{{#if pflichtfall}}⚠ **Pflichtfall:** Ein MD-Gutachten ist gesetzlich vorgeschrieben.{{/if}}",
+      "id": "Text_2",
+      "layout": {
+        "row": "Row_1",
+        "columns": null
+      }
+    },
+    {
+      "type": "group",
+      "label": "Antragsdaten",
+      "showOutline": true,
+      "components": [
+        {
+          "type": "textfield",
+          "label": "Versicherte/r",
+          "key": "versicherterName",
+          "readonly": true,
+          "id": "Textfield_7",
+          "layout": {
+            "row": "Row_3",
+            "columns": 8
+          }
+        },
+        {
+          "type": "textfield",
+          "label": "Versichertennummer",
+          "key": "versichertennummer",
+          "readonly": true,
+          "id": "Textfield_8",
+          "layout": {
+            "row": "Row_3",
+            "columns": 8
+          }
+        },
+        {
+          "type": "textfield",
+          "label": "Leistungsart",
+          "key": "leistungsart",
+          "readonly": true,
+          "id": "Textfield_9",
+          "layout": {
+            "row": "Row_4",
+            "columns": 8
+          }
+        },
+        {
+          "type": "textfield",
+          "label": "Eingangsdatum",
+          "key": "eingangsdatum",
+          "readonly": true,
+          "id": "Textfield_10",
+          "layout": {
+            "row": "Row_4",
+            "columns": 8
+          }
+        },
+        {
+          "type": "textarea",
+          "label": "Leistungsbeschreibung",
+          "key": "leistungsbeschreibung",
+          "readonly": true,
+          "id": "Textarea_11",
+          "layout": {
+            "row": "Row_5",
+            "columns": null
+          }
+        },
+        {
+          "type": "number",
+          "label": "Kosten (EUR)",
+          "key": "kosten",
+          "readonly": true,
+          "id": "Number_12",
+          "layout": {
+            "row": "Row_6",
+            "columns": 8
+          }
+        },
+        {
+          "type": "checkbox",
+          "label": "Ärztliche Verordnung liegt vor",
+          "key": "verordnungLiegtVor",
+          "readonly": true,
+          "id": "Checkbox_13",
+          "layout": {
+            "row": "Row_6",
+            "columns": 8
+          }
+        }
+      ],
+      "id": "Group_15",
+      "layout": {
+        "row": "Row_14",
+        "columns": null
+      }
+    },
+    {
+      "type": "radio",
+      "label": "Prüfergebnis",
+      "key": "pruefergebnis",
+      "validate": {
+        "required": true
+      },
+      "values": [
+        {
+          "label": "Unterlagen fehlen",
+          "value": "UNTERLAGEN_FEHLEN"
+        },
+        {
+          "label": "Gutachten erforderlich",
+          "value": "GUTACHTEN_ERFORDERLICH"
+        },
+        {
+          "label": "Entscheidungsreif (ohne Gutachten)",
+          "value": "ENTSCHEIDUNGSREIF"
+        }
+      ],
+      "id": "Radio_17",
+      "layout": {
+        "row": "Row_16",
+        "columns": null
+      }
+    },
+    {
+      "type": "radio",
+      "label": "Entscheidung",
+      "key": "entscheidung",
+      "validate": {
+        "required": true
+      },
+      "values": [
+        {
+          "label": "Bewilligen",
+          "value": "BEWILLIGT"
+        },
+        {
+          "label": "Ablehnen",
+          "value": "ABGELEHNT"
+        }
+      ],
+      "conditional": {
+        "hide": "=pruefergebnis != \"ENTSCHEIDUNGSREIF\""
+      },
+      "id": "Radio_entscheidung",
+      "layout": {
+        "row": "Row_e1",
+        "columns": null
+      }
+    },
+    {
+      "type": "textarea",
+      "label": "Begründung",
+      "key": "begruendung",
+      "validate": {
+        "required": true
+      },
+      "conditional": {
+        "hide": "=pruefergebnis != \"ENTSCHEIDUNGSREIF\""
+      },
+      "id": "Textarea_begruendung",
+      "layout": {
+        "row": "Row_e2",
+        "columns": null
+      }
+    }
+  ],
+  "type": "default",
+  "id": "form-antrag-pruefen",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "1.0.0"
+  },
+  "schemaVersion": 16
+}
