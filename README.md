@@ -17,7 +17,8 @@ Spannend fand ich vor allem die gesetzlichen Fristen. Nach § 13 Abs. 3a SGB V m
 - [x] Soll-Prozess entworfen (strategisch und operativ)
 - [x] Prozess in Camunda 8 ausführbar gemacht (Formulare, Entscheidungstabelle, Nachrichten) und getestet
 - [x] Dunkelverarbeitung eindeutiger Standardfälle
-- [ ] Automatisierte Prozesstests und Kennzahlen
+- [x] Auswertung mit simulierten Testdaten (Camunda Optimize)
+- [ ] Automatisierte Prozesstests
 
 ## Ist-Prozess
 
@@ -76,6 +77,20 @@ Außerdem war die Fristwarnung anfangs ein fester Testwert. Jetzt wird sie aus d
 
 Im letzten Schritt habe ich eindeutige Standardfälle automatisiert: Ein Hilfsmittel mit ärztlicher Verordnung bis 500 € bewilligt das System ohne Sachbearbeiter. Rechtlich ist das nach § 31a SGB X möglich, solange kein Anlass besteht, den Einzelfall von einem Menschen bearbeiten zu lassen. Wichtig war mir dabei: Das System **bewilligt nur**, es lehnt nie automatisch ab. Alles, was nicht eindeutig ist, landet weiterhin bei der Sachbearbeitung.
 
+## Auswertung
+
+![Dashboard](docs/dashboard.png)
+
+Um zu sehen, ob die Optimierungen wirken, habe ich mit einem kleinen Python-Skript ([`tools/testdaten_generator.py`](tools/testdaten_generator.py)) 150 zufällige Anträge erzeugt und den Prozess automatisch durchlaufen lassen. Das Skript übernimmt dabei die Rollen von Versicherten, Sachbearbeitung und Medizinischem Dienst. Die Zeiten laufen im Zeitraffer: Eine Sekunde entspricht einem Tag.
+
+Das Dashboard beantwortet drei Fragen:
+
+- **Wie viel Handarbeit steckt im Prozess?** Rund [X] % der Anträge werden ohne Sachbearbeiter entschieden.
+- **Wie oft sind Anträge unvollständig?** Bei etwa [Y] % mussten Unterlagen nachgefordert werden.
+- **Wo geht Zeit verloren?** Vor allem beim Warten auf das MD-Gutachten und auf nachgereichte Unterlagen, also bei Dritten und nicht in der Sachbearbeitung.
+
+Daraus ergibt sich auch der nächste sinnvolle Schritt: nicht die Sachbearbeitung beschleunigen, sondern Nachforderungen vermeiden, zum Beispiel durch ein besseres Antragsformular.
+
 ## Ausprobieren
 
 Alles, was in Camunda 8 läuft, liegt im Ordner [`camunda/`](camunda/): der Soll-Prozess, die Entscheidungstabelle und die Formulare. Der Ordner ist per Git Sync mit meinem Camunda-Projekt verbunden. Wer es selbst ausprobieren will, lädt die Dateien in ein Camunda-Projekt, deployt sie gemeinsam und startet den Testmodus. Testdaten sind am Startereignis hinterlegt.
@@ -103,6 +118,11 @@ Die aktuelle Version (v7) liegt in [`camunda/`](camunda/), frühere Stände in [
 | `camunda/` | Ausführbarer Soll-Prozess, Entscheidungstabelle (DMN) und Formulare, synchronisiert mit Camunda |
 | `models/` | Ist-Prozess und strategisches Modell |
 | `models/versionen/` | Frühere Stände des Soll-Prozesses als BPMN und Bild |
-| `docs/` | Diagrammbilder und Badges |
+| `tools/` | Testdaten-Generator (Python) für die Auswertung |
+| `docs/` | Diagrammbilder, Dashboard und Badges |
+
+## Grenzen und Ausblick
+
+Das Projekt bildet die Grundstruktur des Prozesses ab und ist bewusst nicht vollständig. Offen sind unter anderem die schriftliche Mitteilung an Versicherte bei nachgeforderten Unterlagen (§ 13 Abs. 3a Satz 5 SGB V), die Versagung bei fehlender Mitwirkung (§ 66 SGB I) und eine echte technische Anbindung der Sendeaufgaben. Die Auswertungen basieren auf simulierten Testdaten.
 
 *Fiktives Lernprojekt ohne echte Daten.*
