@@ -2,7 +2,7 @@
 Testdaten-Generator für den Prozess „Leistungsantrag bearbeiten“ (Camunda 8).
 
 Was das Skript macht:
-  1. Startet zufällige Leistungsanträge (Nachricht „Antrag“)
+  1. Startet zufällige Leistungsanträge (Nachricht „Leistungsantrag“)
   2. Erledigt alle Sendeaufgaben (Job-Typ „nachricht-versenden“) – ersetzt den fehlenden Job Worker
   3. Bearbeitet die Benutzeraufgaben mit realistischen, zufälligen Entscheidungen
   4. Schickt verzögert die Antworten von außen: Unterlagen (Versicherter), Gutachten (MD), selten eine Rücknahme
@@ -150,7 +150,7 @@ def main():
         if gestartet < args.anzahl and jetzt >= naechster_start:
             gestartet += 1
             a = neuer_antrag(gestartet, lauf)
-            if c.post("/messages/publication", {"name": "Antrag", "correlationKey": a["antragsId"],
+            if c.post("/messages/publication", {"name": "Leistungsantrag", "correlationKey": a["antragsId"],
                                                 "timeToLive": 60000, "variables": a}) is not None:
                 stat["gestartet"] += 1
                 print(f"+ {a['antragsId']}: {a['leistungsart']}, {a['kosten']} €, Verordnung={a['verordnungLiegtVor']}")

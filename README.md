@@ -85,8 +85,8 @@ Um zu sehen, ob die Optimierungen wirken, habe ich mit einem kleinen Python-Skri
 
 Das Dashboard beantwortet drei Fragen:
 
-- **Wie viel Handarbeit steckt im Prozess?** Rund [X] % der Anträge werden ohne Sachbearbeiter entschieden.
-- **Wie oft sind Anträge unvollständig?** Bei etwa [Y] % mussten Unterlagen nachgefordert werden.
+- **Wie viel Handarbeit steckt im Prozess?** Rund 43 % der Anträge werden ohne Sachbearbeiter entschieden.
+- **Wie oft sind Anträge unvollständig?** Bei etwa 8 % mussten Unterlagen nachgefordert werden, rund 19 % gingen zum Medizinischen Dienst.
 - **Wo geht Zeit verloren?** Vor allem beim Warten auf das MD-Gutachten und auf nachgereichte Unterlagen, also bei Dritten und nicht in der Sachbearbeitung.
 
 Daraus ergibt sich auch der nächste sinnvolle Schritt: nicht die Sachbearbeitung beschleunigen, sondern Nachforderungen vermeiden, zum Beispiel durch ein besseres Antragsformular.
